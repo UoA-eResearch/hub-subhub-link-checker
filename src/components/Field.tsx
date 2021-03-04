@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { CollectionResponse, EntrySys, FieldExtensionSDK, Link } from '@contentful/app-sdk';
+import { CollectionResponse, EntrySys, FieldExtensionSDK } from '@contentful/app-sdk';
 import { CombinedLinkActions, MultipleEntryReferenceEditor } from '@contentful/field-editor-reference';
 import { Entry } from '@contentful/field-editor-reference/dist/types';
 import { LinkActionsProps } from '@contentful/field-editor-reference/dist/components';
@@ -34,10 +34,11 @@ const doFailedAlertDialog = (sdk: FieldExtensionSDK, hasMultiplePages: boolean, 
   const page = hasMultiplePages ? "pages" : "page";
   const failedPage = failedPageNames.length > 1 ? "these pages" : "this page";
   const failedPageList = failedPageNames.map(name => "\"" + name + "\"").join(", ");
+  const paragraphBeginning = hasMultiplePages ? "Some of the existing pages" : "The existing page";
   const nextStep = hasMultiplePages ? `Try adding ${failedPage} to the External Pages field instead: ${failedPageList}.` : "Try adding the page to the External Pages field instead."
   sdk.dialogs.openAlert({
-    title: `Adding ${page} to SubHub Internal Pages field failed`,
-    message: `Failed to add the ${page} you chose to the SubHub. Pages may only belong to one SubHub's Internal Pages field, and SubHubs may not link to themselves. \
+    title: `Adding existing ${page} in SubHub Internal Pages field failed`,
+    message: `${paragraphBeginning} you added failed our link check. Pages may only be added to one SubHub's Internal Pages field, and SubHubs may not link to themselves. \
     The External Pages field does not have these limitations. ${nextStep}`
   });
 };
