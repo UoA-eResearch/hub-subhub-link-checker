@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { Icon, Paragraph, ValidationMessage } from '@contentful/forma-36-react-components';
+import React, { useEffect } from 'react';
 import { CollectionResponse, EntrySys, FieldExtensionSDK, Link } from '@contentful/app-sdk';
 import { CombinedLinkActions, MultipleEntryReferenceEditor } from '@contentful/field-editor-reference';
 import { Entry } from '@contentful/field-editor-reference/dist/types';
@@ -9,13 +8,6 @@ import "./Field.css";
 interface FieldProps {
   sdk: FieldExtensionSDK;
 }
-
-enum CHECKING_STATUS {
-  Initial = "INITIAL",
-  Checking = "CHECKING",
-  OK = "OK",
-  Failed = "FAILED"
-};
 
 function checkPageReferences(sdk: FieldExtensionSDK, subhubSys: EntrySys, pageSys: EntrySys): Promise<Boolean> {
   console.log(`Checking page reference for subhub ${subhubSys.id} and page ${pageSys.id}`);
@@ -37,68 +29,6 @@ function checkPageReferences(sdk: FieldExtensionSDK, subhubSys: EntrySys, pageSy
     return entries.items.length === 0;
   });
 }
-
-/**
- * Checks and returns if 
- * @param sdk The Contentful SDK.
- */
-function checkSubhubPages(sdk: FieldExtensionSDK): Promise<boolean | Array<Link>> {
-  const entrySys = sdk.entry.getSys();
-  const linkedPages = sdk.entry.fields["internalPages"].getValue() || [] as Array<Link>;
-  if (linkedPages.length === 0) {
-    // If there are no linked pages in this SubHub, there aren't any problems.
-    return Promise.resolve(true);
-  }
-  return Promise.all(linkedPages.map((page: Link) => {
-    return sdk.space.getEntry(page.sys.id).then(pageEntry => {
-      // Fetch other subhubs that have links to this page.
-      return checkPageReferences(sdk, entrySys, (pageEntry as Entry).sys);
-    });
-  })).then((results: any []) => {
-    const failedPages = (results as boolean[]).filter(value => !value);
-    return failedPages.length === 0;
-  });
-}
-
-
-const CircularSubhubValidator = ({ sdk }: FieldProps) => {
-  const [status, setStatus] = useState(CHECKING_STATUS.Checking);
-  useEffect(() => {
-    const internalPagesField = sdk.field;
-    function doCheckStatus() {
-      setStatus(CHECKING_STATUS.Checking);
-      checkSubhubPages(sdk).then(result => {
-        if (result === true) {
-          setStatus(CHECKING_STATUS.OK);
-          internalPagesField.setInvalid(false);
-        } else {
-          setStatus(CHECKING_STATUS.Failed);
-          internalPagesField.setInvalid(true);
-        }
-      });
-    }
-    const removeValueChangedCb = internalPagesField.onValueChanged((value) => {
-      console.log(`doCheckStatus called with ${value}.`);
-      doCheckStatus();
-    });
-    doCheckStatus();
-    return () => {
-      removeValueChangedCb();
-    }
-  }, [sdk, setStatus]);
-
-  switch (status) {
-    case CHECKING_STATUS.Checking:
-      return <Paragraph>Checking...</Paragraph>;
-    case CHECKING_STATUS.OK:
-      return null;
-    case CHECKING_STATUS.Failed:
-      return <ValidationMessage>Some of your SubHub pages belong(s) to another SubHub. Pages may only belong to one SubHub. Please remove these page(s) from the SubHub. </ValidationMessage>;
-    default:
-      return <Paragraph>Checking...</Paragraph>;
-  }
-}
-
 
 const doFailedAlertDialog = (sdk: FieldExtensionSDK, hasMultiplePages: boolean, failedPageNames : string[]) => {
   const page = hasMultiplePages ? "pages" : "page";
@@ -181,29 +111,13 @@ const CustomLinkActions = ({inheritedProps:props, sdk}: CustomLinkActionsProps) 
 };
 
 const Field = ({ sdk }: FieldProps) => {
-  // If you only want to extend Contentful's default editing experience
-  // reuse Contentful's editor components
-  // -> https://www.contentful.com/developers/docs/extensibility/field-editors/
-  // return <Paragraph>Hello Entry Field Component</Paragraph>;
   useEffect(() => {
-    const subhubPages = sdk.field.getValue();
-    console.log(subhubPages);
-    if (!subhubPages || subhubPages.length < 3) {
-          // Need to check in order to fix height problem;
-          console.log("Setting height manually");
-          sdk.window.updateHeight(700);
-    }
     sdk.window.startAutoResizer();
-    console.log("Size is ", Math.ceil(document.documentElement.getBoundingClientRect().height));
-    window.addEventListener("resize", () => {
-      console.log("Size changed! New size is ", Math.ceil(document.documentElement.getBoundingClientRect().height));
-    })
     return () => {
       sdk.window.stopAutoResizer();
     }
-  }, [sdk.window, sdk.field]);
-  return <div>
-    <MultipleEntryReferenceEditor
+  }, [sdk.window]);
+  return <MultipleEntryReferenceEditor
       viewType="link"
       hasCardEditActions={true}
       sdk={sdk}
@@ -217,9 +131,7 @@ const Field = ({ sdk }: FieldProps) => {
       renderCustomActions={
         props => <CustomLinkActions inheritedProps={props} sdk={sdk}/>
       }
-    />
-    {/* <CircularSubhubValidator sdk={sdk} /> */}
-  </div>;
+    />;
 
 };
 
