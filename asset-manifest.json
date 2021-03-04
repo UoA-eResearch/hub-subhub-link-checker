@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/hub-subhub-link-checker/static/css/main.9e2b63d0.chunk.css",
+    "main.js": "/hub-subhub-link-checker/static/js/main.80b2f582.chunk.js",
+    "main.js.map": "/hub-subhub-link-checker/static/js/main.80b2f582.chunk.js.map",
+    "runtime-main.js": "/hub-subhub-link-checker/static/js/runtime-main.c9eb51d1.js",
+    "runtime-main.js.map": "/hub-subhub-link-checker/static/js/runtime-main.c9eb51d1.js.map",
+    "static/css/2.27b0adaa.chunk.css": "/hub-subhub-link-checker/static/css/2.27b0adaa.chunk.css",
+    "static/js/2.ce1f4b3c.chunk.js": "/hub-subhub-link-checker/static/js/2.ce1f4b3c.chunk.js",
+    "static/js/2.ce1f4b3c.chunk.js.map": "/hub-subhub-link-checker/static/js/2.ce1f4b3c.chunk.js.map",
+    "index.html": "/hub-subhub-link-checker/index.html",
+    "static/css/2.27b0adaa.chunk.css.map": "/hub-subhub-link-checker/static/css/2.27b0adaa.chunk.css.map",
+    "static/css/main.9e2b63d0.chunk.css.map": "/hub-subhub-link-checker/static/css/main.9e2b63d0.chunk.css.map",
+    "static/js/2.ce1f4b3c.chunk.js.LICENSE.txt": "/hub-subhub-link-checker/static/js/2.ce1f4b3c.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c9eb51d1.js",
+    "static/css/2.27b0adaa.chunk.css",
+    "static/js/2.ce1f4b3c.chunk.js",
+    "static/css/main.9e2b63d0.chunk.css",
+    "static/js/main.80b2f582.chunk.js"
+  ]
+}
