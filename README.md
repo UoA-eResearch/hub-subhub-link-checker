@@ -1,3 +1,20 @@
+# ResearchHub SubHub Internal Pages Link-Checking App
+
+Contentful App for ensuring pages on ResearchHub are only linked to by _one_ SubHub internal pages field.
+
+The App is a replacement editor for the [default reference field editor](https://www.contentful.com/developers/docs/extensibility/field-editors/).
+The replacement editor behaves and looks the same as the built-in one. To use it, set it up as the editor for the Internal Pages field in the Content model details page.
+It checks whether the pages that the author wishes to add to the Internal Pages field already belong to another SubHub's Internal Pages field. If so, it will
+display an error. If not, it will add the pages to the field.
+
+Part of the Hub Expansion project. This is required due to SubHub routing logic in the frontend.
+
+See [hub-stack](https://github.com/UoA-eResearch/hub-stack) for more information on ResearchHub.
+
+## Deployment
+To deploy this App to a Contentful environment.
+
+## Development
 This project was bootstrapped with [Create Contentful App](https://github.com/contentful/create-contentful-app).
 
 ## Available Scripts
